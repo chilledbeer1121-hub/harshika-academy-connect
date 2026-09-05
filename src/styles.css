@@ -436,8 +436,11 @@ html.lenis {
     .results-rail.is-rail {
       view-timeline-name: --rail;
       view-timeline-axis: block;
-      /* One viewport to pin, then ~300px of runway per card. */
-      min-height: calc(100svh + var(--rail-cards, 12) * 300px);
+      /* One viewport to pin, then 220px of runway per card: the row moves a
+         little faster than the finger (about 1.2x), which reads as brisk
+         rather than endless, and the skip button covers anyone who came for
+         the timetable. */
+      min-height: calc(100svh + var(--rail-cards, 12) * 220px);
       padding-block: 0;
       /* Where the content column starts, so the track lines up with it. */
       --rail-pad: max(1.5rem, calc((100vw - 1200px) / 2 + 1.5rem));
@@ -476,6 +479,21 @@ html.lenis {
       animation-timeline: --rail;
       animation-range: contain 0% contain 100%;
     }
+    /* The way out. Shown only while the rail is pinned, and gone for the last
+       stretch, when there is nothing left to skip. */
+    .is-rail .results-skip {
+      display: inline-flex;
+      animation: rail-skip linear both;
+      animation-timeline: --rail;
+      animation-range: contain 82% contain 100%;
+    }
+  }
+}
+
+@keyframes rail-skip {
+  to {
+    opacity: 0;
+    visibility: hidden;
   }
 }
 

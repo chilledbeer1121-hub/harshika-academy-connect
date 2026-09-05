@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowDown, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -23,7 +23,8 @@ import { Reveal, SectionHeading } from "./shared";
  *   mouse drag on desktop.
  *
  * Nothing here branches on which mode is active except the focus handler,
- * which has to know whether a card can be scrolled into view natively.
+ * which has to know whether a card can be scrolled into view natively. The
+ * skip button is rail-only too, but CSS hides it, so it needs no branch.
  */
 export function Results() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -95,6 +96,15 @@ export function Results() {
     const sectionTop = section.getBoundingClientRect().top + window.scrollY;
     const runway = section.offsetHeight - window.innerHeight;
     scrollWindowTo(Math.round(sectionTop + progress * runway), reducedMotion);
+  };
+
+  /**
+   * Eighteen cards is a long ride for a parent who came for the timetable.
+   * Land on whatever follows the rail, with its own scroll margin honoured.
+   */
+  const skipRail = () => {
+    const next = sectionRef.current?.nextElementSibling;
+    if (next instanceof HTMLElement) scrollWindowTo(next, reducedMotion);
   };
 
   // Click-and-drag on desktop. Touch devices already scroll natively, so mouse only.
@@ -238,6 +248,17 @@ export function Results() {
             </p>
           </Reveal>
         </div>
+
+        {/* Rail mode only (see `.results-skip`). Sits above the phone's bottom
+            actions, and in the corner-free middle on wider screens. */}
+        <button
+          type="button"
+          onClick={skipRail}
+          className="results-skip focus-ring absolute bottom-24 left-1/2 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-gold/30 bg-page/85 px-4 py-2 font-utility text-[10px] font-semibold uppercase tracking-wider text-gold backdrop-blur transition-colors hover:bg-gold/10 sm:bottom-6"
+        >
+          Skip results
+          <ArrowDown className="size-3.5" aria-hidden="true" />
+        </button>
       </div>
     </section>
   );

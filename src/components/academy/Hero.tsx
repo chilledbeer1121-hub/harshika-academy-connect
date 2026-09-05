@@ -10,7 +10,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-svh scroll-mt-28 items-center overflow-hidden px-5 pb-24 pt-28 sm:px-6 sm:pt-32"
+      className="relative flex min-h-svh scroll-mt-28 items-center overflow-clip px-5 pb-24 pt-28 sm:px-6 sm:pt-32"
     >
       {/* Soft gold glow behind the portrait. */}
       <div

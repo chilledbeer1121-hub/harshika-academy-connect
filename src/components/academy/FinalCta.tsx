@@ -4,7 +4,7 @@ import { Reveal, WhatsAppButton } from "./shared";
 
 export function FinalCta() {
   return (
-    <section className="ink-band relative overflow-hidden px-5 py-20 text-center sm:px-6">
+    <section className="ink-band relative overflow-clip px-5 py-20 text-center sm:px-6">
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(227,178,60,0.14),transparent_55%)]"

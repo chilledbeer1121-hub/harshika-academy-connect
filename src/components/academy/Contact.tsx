@@ -94,7 +94,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="ground-drift ink-approach relative scroll-mt-28 overflow-hidden px-5 py-14 sm:px-6 sm:py-24 lg:py-28"
+      className="ground-drift ink-approach relative scroll-mt-28 overflow-clip px-5 py-14 sm:px-6 sm:py-24 lg:py-28"
       style={
         {
           "--ground-from": "var(--page)",

@@ -5,9 +5,8 @@ import { PillarGlyph, Reveal, SectionHeading } from "./shared";
  * Split layout with the photographs pinned on lg while the copy scrolls
  * past them. The two photos ride a view timeline on the section and drift in
  * opposite directions, so they read as two layers rather than one flat image.
- * A ghosted "DOUBTS" behind the heading drifts the other way for the same
- * reason. All of it is CSS (see `.about-*` in styles.css) and all of it is
- * off under reduced motion.
+ * All of it is CSS (see `.about-*` in styles.css) and all of it is off under
+ * reduced motion.
  */
 export function About() {
   return (
@@ -15,14 +14,6 @@ export function About() {
       id="about"
       className="about-section relative scroll-mt-28 px-5 py-14 sm:px-6 sm:py-24 lg:py-28"
     >
-      {/* Clips only the ghost word; the pinned column is a sibling, so sticky
-          is unaffected. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <span className="about-ghost absolute -right-2 top-8 select-none font-display text-[22vw] uppercase leading-none text-gold/[0.06] lg:top-14 lg:text-[16vw]">
-          Doubts
-        </span>
-      </div>
-
       <div className="relative mx-auto max-w-[1200px]">
         <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-20">
           <div className="lg:sticky lg:top-28">

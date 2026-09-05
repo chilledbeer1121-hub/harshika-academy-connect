@@ -299,6 +299,24 @@ html.lenis {
   color-scheme: dark;
   background-color: var(--page);
   color: var(--body);
+  /* Grain. A flat #0b0e14 reads as a fill; a little fractal noise reads as a
+     surface. The layer is isolated below the band's children (z -1 inside its
+     own stacking context) so it textures the ground, never the text. One SVG
+     tile, generated once, tiled — no asset, no runtime cost. */
+  position: relative;
+  isolation: isolate;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    /* screen, not overlay: overlay collapses to ~0 on a near-black base. */
+    opacity: 0.12;
+    mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
 }
 
 @media (min-width: 640px) {
@@ -426,8 +444,7 @@ html.lenis {
       view-timeline-axis: block;
     }
     .about-photo-a,
-    .about-photo-b,
-    .about-ghost {
+    .about-photo-b {
       animation: linear both;
       animation-timeline: --about;
       animation-range: contain 0% contain 100%;
@@ -437,9 +454,6 @@ html.lenis {
     }
     .about-photo-b {
       animation-name: about-b;
-    }
-    .about-ghost {
-      animation-name: about-ghost;
     }
   }
 }
@@ -459,15 +473,6 @@ html.lenis {
   }
   to {
     transform: translateY(30px);
-  }
-}
-
-@keyframes about-ghost {
-  from {
-    transform: translateX(5vw);
-  }
-  to {
-    transform: translateX(-7vw);
   }
 }
 
@@ -491,8 +496,7 @@ html.lenis {
   .results-track,
   .results-progress > span,
   .about-photo-a,
-  .about-photo-b,
-  .about-ghost {
+  .about-photo-b {
     animation: none !important;
     opacity: 1;
     transform: none;

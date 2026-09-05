@@ -7,15 +7,11 @@ import { onViewportChange, useReducedMotion } from "@/hooks/use-motion";
 import { scrollWindowTo } from "@/lib/smooth-scroll";
 
 /**
- * The always-on actions.
+ * The always-on actions, bottom right at every size.
  *
- * On a phone they are a dock along the bottom edge: Call and WhatsApp side by
- * side at thumb size, with back-to-top floating above the dock's right end once
- * the page has scrolled. Two circles stacked in a corner covered content and
- * took a stretch to reach; a dock is where a thumb already rests. From `sm` up
- * the dock gives way to the corner pair, the WhatsApp pill and back-to-top.
- * The footer's extra bottom padding on phones is what keeps its last line
- * clear of the dock.
+ * Phones get two circles, Call and WhatsApp: a full-width dock was tried and
+ * covered too much of the page. From `sm` up they are the WhatsApp pill and
+ * back-to-top, as before.
  */
 export function FloatingActions() {
   const [showTop, setShowTop] = useState(false);
@@ -31,49 +27,43 @@ export function FloatingActions() {
 
   const toTop = () => scrollWindowTo(0, reducedMotion);
 
-  const topButtonClass = cn(
-    "focus-ring grid size-11 place-items-center rounded-full border border-gold/30 bg-page/90 text-gold shadow-lg backdrop-blur transition-all duration-300 hover:border-gold hover:bg-gold-fill hover:text-on-gold",
-    showTop ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0",
-  );
-
   return (
     <>
-      {/* Phones: the dock. */}
-      <nav
-        aria-label="Quick actions"
-        className="fixed inset-x-3 bottom-3 z-[80] pb-[env(safe-area-inset-bottom)] sm:hidden"
-      >
+      {/* Phones: two circles. */}
+      <div className="fixed bottom-4 right-4 z-[80] flex flex-col items-center gap-3 sm:hidden">
+        <a
+          href={academy.phoneHref}
+          aria-label={`Call ${academy.phone}`}
+          className="focus-ring grid size-12 place-items-center rounded-full border border-gold/30 bg-page/90 text-gold shadow-lg backdrop-blur transition-colors hover:border-gold hover:bg-gold-fill hover:text-on-gold"
+        >
+          <Phone className="size-5" aria-hidden="true" />
+        </a>
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noreferrer noopener"
+          aria-label="Chat with us on WhatsApp"
+          className="focus-ring relative grid size-14 place-items-center rounded-full bg-[#25D366] text-white elevate-md"
+        >
+          <span
+            aria-hidden="true"
+            className="pulse-ring absolute inset-0 rounded-full border-2 border-[#25D366]"
+          />
+          <WhatsAppGlyph className="size-6" />
+        </a>
+      </div>
+
+      {/* sm and up: the corner pair. */}
+      <div className="fixed bottom-6 right-6 z-[80] hidden flex-col items-end gap-3 sm:flex">
         <button
           type="button"
           onClick={toTop}
           aria-label="Back to top"
-          className={cn(topButtonClass, "absolute -top-14 right-0")}
+          className={cn(
+            "focus-ring grid size-11 place-items-center rounded-full border border-gold/30 bg-page/90 text-gold shadow-lg backdrop-blur transition-all duration-300 hover:border-gold hover:bg-gold-fill hover:text-on-gold",
+            showTop ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0",
+          )}
         >
-          <ArrowUp className="size-5" aria-hidden="true" />
-        </button>
-        <div className="grid grid-cols-[1fr_1.35fr] gap-1.5 rounded-full border border-gold/20 bg-page/90 p-1.5 elevate-lg backdrop-blur-md">
-          <a
-            href={academy.phoneHref}
-            className="focus-ring flex h-12 items-center justify-center gap-2 rounded-full font-utility text-[11px] font-bold uppercase tracking-wider text-heading transition-colors hover:bg-gold/10"
-          >
-            <Phone className="size-4 text-gold" aria-hidden="true" />
-            Call
-          </a>
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="focus-ring flex h-12 items-center justify-center gap-2 rounded-full bg-[#25D366] font-utility text-[11px] font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#1fb857]"
-          >
-            <WhatsAppGlyph className="size-5" />
-            WhatsApp
-          </a>
-        </div>
-      </nav>
-
-      {/* sm and up: the corner pair. */}
-      <div className="fixed bottom-6 right-6 z-[80] hidden flex-col items-end gap-3 sm:flex">
-        <button type="button" onClick={toTop} aria-label="Back to top" className={topButtonClass}>
           <ArrowUp className="size-5" aria-hidden="true" />
         </button>
 

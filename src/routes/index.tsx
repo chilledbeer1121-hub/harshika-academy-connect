@@ -121,18 +121,24 @@ function HomePage() {
       <ScrollProgress />
       <Header />
 
-      <main>
+      {/* `#home` sits on <main> rather than the hero: the hero may be pinned
+          (see Hero.tsx), and a stuck element misreports its page position. */}
+      <main id="home">
         <Hero />
-        <TrustStrip />
-        <About />
-        <CourseStack />
-        <Faculty />
-        <Admission />
-        <Results />
-        <Gallery />
-        <Faq />
-        <Contact />
-        <FinalCta />
+        {/* Opaque and above the hero, so when the hero pins the rest of the
+            page slides up over it like a curtain. */}
+        <div className="relative z-10 bg-page">
+          <TrustStrip />
+          <About />
+          <CourseStack />
+          <Faculty />
+          <Admission />
+          <Results />
+          <Gallery />
+          <Faq />
+          <Contact />
+          <FinalCta />
+        </div>
       </main>
 
       <Footer />

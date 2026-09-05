@@ -382,11 +382,16 @@ html.lenis {
       animation-range: var(--ground-range, contain 50% exit 60%);
     }
 
-    /* A dark fade that rises from the section's foot as the next ink band
-       nears. Isolated below the section's children (z -1), so it tints the
-       ground and never the type; the copy that sits low in these sections is
-       inside opaque panels anyway. Drives off its own view timeline: from a
-       quarter entered to top-at-top, when the seam is in view. */
+    /* The next ink band arrives as halftone: a grid of ink dots over the
+       section's foot that grow until they close, heaviest at the seam, so the
+       ground dissolves into the band instead of fading into it. Isolated below
+       the section's children (z -1), so it textures the ground and never the
+       type; the copy that sits low in these sections is inside opaque panels
+       anyway. Two masks intersected: the dot tile, whose radius rides the
+       scroll, and a vertical ramp so the layer's top edge starts clear. Drives
+       off its own view timeline: the dots start as the layer enters and have
+       closed by the time the seam has risen a fifth of the viewport, so the
+       band reads as ink growing upward through the ground. */
     .ink-approach {
       position: relative;
       isolation: isolate;
@@ -397,12 +402,77 @@ html.lenis {
         z-index: -1;
         height: 45vh;
         pointer-events: none;
-        background: linear-gradient(to bottom, transparent, #0b0e14);
-        animation: ink-approach linear both;
+        background: #0b0e14;
+        mask-image:
+          radial-gradient(circle, #000 var(--dg-r), transparent calc(var(--dg-r) + 0.75px)),
+          linear-gradient(to bottom, transparent, #000 75%);
+        mask-size:
+          22px 22px,
+          100% 100%;
+        mask-composite: intersect;
+        animation: dot-gain linear both;
         animation-timeline: view();
-        animation-range: entry 25% exit 0%;
+        animation-range: entry 10% contain 40%;
       }
     }
+  }
+}
+
+/* The dot radius has to be a registered <length> to interpolate. 16px closes a
+   22px tile (the corner sits 15.6px from the centre). */
+@property --dg-r {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes dot-gain {
+  from {
+    --dg-r: 0px;
+  }
+  to {
+    --dg-r: 16px;
+  }
+}
+
+/* --- Hero curtain: the page slides up over a pinned hero ------------------ */
+
+/* Only when the hero fits the viewport (measured in Hero.tsx; a pinned hero
+   taller than the screen would hide its own foot for good), and only where
+   scroll-driven animation is available and motion is welcome. The wrapper
+   around everything after the hero (routes/index.tsx) is opaque and above it,
+   so the page rises over the hero like a curtain while the copy recedes; the
+   portrait already drifts (`.hero-drift`). */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .hero-section.is-pinned {
+      position: sticky;
+      top: 0;
+      /* Once the curtain has covered it entirely, the hero is hidden outright:
+         nothing behind the page to tab into, nothing to composite. Visibility
+         flips only at the very end of the range. */
+      animation: hero-hide linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100svh;
+    }
+    .is-pinned .hero-copy {
+      animation: hero-recede linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 70vh;
+    }
+  }
+}
+
+@keyframes hero-hide {
+  to {
+    visibility: hidden;
+  }
+}
+
+@keyframes hero-recede {
+  to {
+    opacity: 0.25;
+    transform: translateY(-32px) scale(0.97);
   }
 }
 
@@ -476,17 +546,6 @@ html.lenis {
   }
   to {
     background-color: var(--ground-to);
-  }
-}
-
-@keyframes ink-approach {
-  from {
-    opacity: 0;
-    transform: translateY(40%);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -641,7 +700,8 @@ html.lenis {
   .ground-drift,
   .ink-approach::after,
   .read-word,
-  .chapter-rule {
+  .chapter-rule,
+  .hero-copy {
     animation: none !important;
     opacity: 1;
     transform: none;

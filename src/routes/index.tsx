@@ -126,9 +126,12 @@ function HomePage() {
           (see Hero.tsx), and a stuck element misreports its page position. */}
       <main id="home">
         <Hero />
-        {/* Opaque and above the hero, so when the hero pins the rest of the
-            page slides up over it like a curtain. */}
-        <div className="relative z-10 bg-page">
+        {/* Opaque and positioned, so when the hero pins the rest of the page
+            slides up over it like a curtain: later in the tree, so it paints
+            above the hero without needing a z-index. Deliberately no z-index,
+            since that would make this wrapper a stacking context and trap the
+            lightboxes inside it beneath the header and the dock. */}
+        <div className="relative bg-page">
           <TrustStrip />
           <About />
           <CourseStack />

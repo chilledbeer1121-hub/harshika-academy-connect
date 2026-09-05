@@ -36,7 +36,7 @@ export function Hero() {
     <section
       ref={sectionRef}
       className={cn(
-        "hero-section relative flex min-h-svh items-center overflow-clip px-5 pb-24 pt-28 sm:px-6 sm:pt-32",
+        "hero-section relative isolate flex min-h-svh items-center overflow-clip px-5 pb-24 pt-28 sm:px-6 sm:pt-32",
         pinned && "is-pinned",
       )}
     >

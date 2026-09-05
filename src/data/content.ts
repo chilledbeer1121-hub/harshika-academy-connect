@@ -405,8 +405,17 @@ export type ResultCard = {
  * one fall back to initials.
  */
 export const results: ResultCard[] = [
-  // Strongest first: the two who cleared the Navodaya entrance, then rank
-  // holders, then marks descending.
+  // Strongest first, in the order the academy's own achievers banner uses:
+  // the Sainik School selection, the two who cleared the Navodaya entrance,
+  // the Class 9 topper, then rank holders, then marks descending.
+  {
+    name: "Aditya Yadav",
+    className: "Sainik School Batch",
+    result: "Selected",
+    note: "Sainik School entrance exam",
+    initials: "AY",
+    image: "/assets/students/aditya-yadav.webp",
+  },
   {
     name: "Pratika Panwar",
     className: "Navodaya Batch",
@@ -422,6 +431,13 @@ export const results: ResultCard[] = [
     note: "Navodaya entrance exam",
     initials: "SS",
     image: "/assets/students/sonali-sahu.webp",
+  },
+  {
+    name: "Devendra Yaduvanshi",
+    className: "Class 9",
+    result: "94%",
+    initials: "DY",
+    image: "/assets/students/devendra-yaduvanshi.webp",
   },
   {
     name: "Akshita Goswami",

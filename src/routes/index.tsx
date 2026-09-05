@@ -5,7 +5,6 @@ import "lenis/dist/lenis.css";
 
 import { startSmoothScroll } from "@/lib/smooth-scroll";
 import { About } from "@/components/academy/About";
-import { Admission } from "@/components/academy/Admission";
 import { Contact } from "@/components/academy/Contact";
 import { CourseStack } from "@/components/academy/CourseStack";
 import { Faculty } from "@/components/academy/Faculty";
@@ -136,7 +135,6 @@ function HomePage() {
           <About />
           <CourseStack />
           <Faculty />
-          <Admission />
           <Results />
           <HonourWall />
           <Gallery />

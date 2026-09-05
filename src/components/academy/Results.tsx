@@ -137,16 +137,25 @@ export function Results() {
       ref={sectionRef}
       id="results"
       className={cn(
-        "results-rail scroll-mt-28 bg-sand py-14 sm:py-24 lg:py-28",
+        "results-rail ground-drift scroll-mt-28 bg-sand py-14 sm:py-24 lg:py-28",
         railable && "is-rail",
       )}
-      style={{ "--rail-cards": results.length } as React.CSSProperties}
+      style={
+        {
+          "--rail-cards": results.length,
+          // Warms from the ink band above to sand over the first viewport of
+          // travel (top-at-bottom to top-at-top), whatever the section's height.
+          "--ground-from": "var(--ground-dusk)",
+          "--ground-to": "var(--ground-sand)",
+          "--ground-range": "entry 0% contain 0%",
+        } as React.CSSProperties
+      }
     >
       <div className="results-pin">
         <div className="results-inner mx-auto w-full max-w-[1200px] px-5 sm:px-6">
           <div className="flex items-end justify-between gap-5">
             <SectionHeading
-              chapter="05"
+              chapter="04"
               eyebrow="Our Results"
               title="Students Who"
               highlight="Made It Count"

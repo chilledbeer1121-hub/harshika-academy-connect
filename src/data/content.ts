@@ -370,15 +370,6 @@ export const heroPortrait = {
   alt: "Mohit Sarathe, CTET-qualified faculty head at Harshika Academy",
 };
 
-// -- Admission ----------------------------------------------------------------
-
-export type Step = { title: string; text: string };
-
-export const admissionSteps: Step[] = [
-  { title: "Message or call us", text: "Tell us your class and subjects." },
-  { title: "Confirm your seat", text: "We share the timetable and you begin." },
-];
-
 // -- Results ------------------------------------------------------------------
 
 export type ResultCard = {

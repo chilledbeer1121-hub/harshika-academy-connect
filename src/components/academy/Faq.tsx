@@ -18,7 +18,7 @@ export function Faq() {
         {/* Pinned on lg so the heading keeps the questions company as they scroll. */}
         <div className="lg:sticky lg:top-28 lg:self-start">
           <SectionHeading
-            chapter="07"
+            chapter="06"
             eyebrow="Questions"
             title="Before You"
             highlight="Join"

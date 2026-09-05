@@ -16,6 +16,7 @@ export function Admission() {
     >
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
+          chapter="04"
           eyebrow="Getting Started"
           title="Two Steps"
           highlight="to Join"

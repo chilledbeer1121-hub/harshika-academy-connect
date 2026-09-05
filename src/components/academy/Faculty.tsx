@@ -42,6 +42,7 @@ function TeacherCard({ teacher, showHeading }: { teacher: Teacher; showHeading: 
       <div>
         {showHeading ? (
           <SectionHeading
+            chapter="03"
             eyebrow="Meet Your Teacher"
             title={firstName ?? ""}
             highlight={rest.join(" ")}

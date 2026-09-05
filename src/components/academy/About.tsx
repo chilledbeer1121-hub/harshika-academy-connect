@@ -51,6 +51,7 @@ export function About() {
 
           <div>
             <SectionHeading
+              chapter="01"
               eyebrow="About Us"
               title="A Classroom Where"
               highlight="Doubts Are Welcome"

@@ -110,6 +110,7 @@ export function Contact() {
       <div className="relative mx-auto grid max-w-[1200px] gap-14 lg:grid-cols-2 lg:gap-20">
         <div>
           <SectionHeading
+            chapter="08"
             eyebrow="Get In Touch"
             title="Come See The"
             highlight="Classroom"

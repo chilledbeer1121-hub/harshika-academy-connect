@@ -145,7 +145,12 @@ export function Results() {
       <div className="results-pin">
         <div className="results-inner mx-auto w-full max-w-[1200px] px-5 sm:px-6">
           <div className="flex items-end justify-between gap-5">
-            <SectionHeading eyebrow="Our Results" title="Students Who" highlight="Made It Count" />
+            <SectionHeading
+              chapter="05"
+              eyebrow="Our Results"
+              title="Students Who"
+              highlight="Made It Count"
+            />
             {/* Nothing to page through when the row already fits — a pair of
                 permanently disabled arrows just reads as broken. */}
             <div

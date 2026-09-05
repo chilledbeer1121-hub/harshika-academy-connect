@@ -104,21 +104,42 @@ export function LogoLockup({ compact = false }: { compact?: boolean }) {
   );
 }
 
+/**
+ * `chapter` is the section's number in the page's running order, set in gold
+ * foil with a hairline that draws itself as the heading scrolls in (see
+ * `.chapter-rule`). Decorative, so hidden from assistive tech; the eyebrow
+ * already names the section.
+ */
 export function SectionHeading({
+  chapter,
   eyebrow,
   title,
   highlight,
   intro,
   align = "left",
 }: {
+  chapter?: string;
   eyebrow: string;
   title: string;
   highlight?: string;
   intro?: string;
   align?: "left" | "center";
 }) {
+  const rule = (origin: string) => (
+    <span className={cn("chapter-rule h-px flex-1 bg-gold/35", origin)} />
+  );
+
   return (
-    <div className={cn("max-w-3xl", align === "center" && "mx-auto text-center")}>
+    <div className={cn("section-heading max-w-3xl", align === "center" && "mx-auto text-center")}>
+      {chapter ? (
+        <div aria-hidden="true" className="chapter-mark mb-6 flex items-center gap-4">
+          {align === "center" ? rule("origin-right") : null}
+          <span className="gold-foil font-display text-[1.75rem] leading-none tabular-nums">
+            {chapter}
+          </span>
+          {rule("origin-left")}
+        </div>
+      ) : null}
       <Reveal>
         <p className="font-utility text-xs font-semibold uppercase tracking-[0.18em] text-gold">
           {eyebrow}

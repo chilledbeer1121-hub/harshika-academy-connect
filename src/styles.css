@@ -406,6 +406,37 @@ html.lenis {
   }
 }
 
+/* --- Chapter marks: the hairline beside each numeral draws itself --------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .section-heading {
+      view-timeline-name: --chapter;
+      view-timeline-axis: block;
+    }
+    .chapter-rule {
+      animation: chapter-rule linear both;
+      animation-timeline: --chapter;
+      animation-range: entry 20% contain 25%;
+    }
+    /* The results heading rides the sticky pin, and a stuck subject's contain
+       phase stretches across the whole rail, so its rule would draw for
+       thousands of pixels. Finish it on entry instead, before the pin engages. */
+    .results-rail .chapter-rule {
+      animation-range: entry 20% entry 100%;
+    }
+  }
+}
+
+@keyframes chapter-rule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 /* --- Read-along: About's copy brightens as the eye reaches it ------------- */
 
 /* Each word's window opens a little after the previous one's, so the
@@ -609,7 +640,8 @@ html.lenis {
   .about-photo-b,
   .ground-drift,
   .ink-approach::after,
-  .read-word {
+  .read-word,
+  .chapter-rule {
     animation: none !important;
     opacity: 1;
     transform: none;

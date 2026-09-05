@@ -182,9 +182,20 @@ export function Results() {
             </div>
           </div>
 
-          {/* Rail mode only: how far along the row you are. */}
-          <div aria-hidden="true" className="results-progress mt-6 hidden h-px w-full bg-gold/15">
-            <span className="block h-full w-full origin-left bg-gold-fill" />
+          {/* Rail mode only: how far along the row you are, and the way out.
+              The skip pill rides the line's right end and overlaps only the
+              margins above and below it. Nothing may float over the cards:
+              on a phone the pinned content fills the whole viewport. */}
+          <div className="results-progress relative mt-6 hidden h-px w-full bg-gold/15">
+            <span aria-hidden="true" className="block h-full w-full origin-left bg-gold-fill" />
+            <button
+              type="button"
+              onClick={skipRail}
+              className="results-skip focus-ring absolute right-0 top-1/2 hidden -translate-y-1/2 items-center gap-2 rounded-full border border-gold/30 bg-page px-3 py-1.5 font-utility text-[10px] font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold/10"
+            >
+              Skip results
+              <ArrowDown className="size-3.5" aria-hidden="true" />
+            </button>
           </div>
 
           <div
@@ -253,17 +264,6 @@ export function Results() {
             </p>
           </Reveal>
         </div>
-
-        {/* Rail mode only (see `.results-skip`). Sits above the phone's bottom
-            actions, and in the corner-free middle on wider screens. */}
-        <button
-          type="button"
-          onClick={skipRail}
-          className="results-skip focus-ring absolute bottom-24 left-1/2 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-gold/30 bg-page/85 px-4 py-2 font-utility text-[10px] font-semibold uppercase tracking-wider text-gold backdrop-blur transition-colors hover:bg-gold/10 sm:bottom-6"
-        >
-          Skip results
-          <ArrowDown className="size-3.5" aria-hidden="true" />
-        </button>
       </div>
     </section>
   );

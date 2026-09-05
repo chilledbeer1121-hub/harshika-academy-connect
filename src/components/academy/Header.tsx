@@ -3,7 +3,7 @@ import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { academy, navItems, whatsappUrl } from "@/data/content";
+import { academy, navItems } from "@/data/content";
 import { onViewportChange, useReducedMotion } from "@/hooks/use-motion";
 import { scrollWindowTo } from "@/lib/smooth-scroll";
 import { LogoLockup } from "./shared";
@@ -119,16 +119,12 @@ export function Header() {
             })}
           </ul>
 
+          {/* No WhatsApp button up here: the dock (phones) and the corner pill
+              (larger screens) already carry it, always on screen. The theme
+              toggle stays in the bar at every size so it is one tap away, not
+              buried in the menu. */}
           <div className="flex items-center gap-1.5">
-            <ThemeToggle className="hidden sm:grid" />
-            <Button
-              asChild
-              className="focus-ring h-9 rounded-full bg-gold-fill px-3 font-utility text-[10px] font-bold uppercase tracking-wider text-on-gold transition-colors hover:bg-gold-fill-strong sm:px-5"
-            >
-              <a href={whatsappUrl} target="_blank" rel="noreferrer noopener">
-                WhatsApp<span className="hidden sm:inline">&nbsp;Us</span>
-              </a>
-            </Button>
+            <ThemeToggle />
             <Button
               variant="ghost"
               size="icon"
@@ -162,12 +158,6 @@ export function Header() {
               {item.label}
             </button>
           ))}
-          <div className="mt-8 flex items-center gap-3 sm:hidden">
-            <ThemeToggle />
-            <span className="font-utility text-[11px] uppercase tracking-[0.18em] text-body">
-              Switch theme
-            </span>
-          </div>
           <p className="mt-8 font-utility text-[10px] uppercase tracking-[0.28em] text-gold/60">
             {academy.tagline}
           </p>

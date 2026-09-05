@@ -539,6 +539,23 @@ export const results: ResultCard[] = [
   },
 ];
 
+// -- Honour wall --------------------------------------------------------------
+
+/**
+ * The achievers banner that hangs in the academy, shown whole on the site
+ * (source: the print export in poster-kit/, 8 ft x 4 ft). Two sizes of the
+ * same image: the small one inline, the large one when a visitor taps to read
+ * the names. Replace both when the banner is reprinted; the copy on the page
+ * deliberately quotes no student count, so it cannot go stale.
+ */
+export const honourWall = {
+  src: "/assets/honour-wall-1200.webp",
+  srcLarge: "/assets/honour-wall-2400.webp",
+  width: 2400,
+  height: 1200,
+  alt: "Harshika Academy's achievers banner: the five top achievers in the centre, including Sainik School and Navodaya qualifiers, above every student across the classes, each with their name.",
+};
+
 // -- Gallery ------------------------------------------------------------------
 
 export const galleryCategories = ["All", "Classroom", "Events", "Achievements"] as const;

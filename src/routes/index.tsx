@@ -16,6 +16,7 @@ import { Footer } from "@/components/academy/Footer";
 import { Gallery } from "@/components/academy/Gallery";
 import { Header } from "@/components/academy/Header";
 import { Hero } from "@/components/academy/Hero";
+import { HonourWall } from "@/components/academy/HonourWall";
 import { Results } from "@/components/academy/Results";
 import { ScrollProgress } from "@/components/academy/ScrollProgress";
 import { TrustStrip } from "@/components/academy/TrustStrip";
@@ -134,6 +135,7 @@ function HomePage() {
           <Faculty />
           <Admission />
           <Results />
+          <HonourWall />
           <Gallery />
           <Faq />
           <Contact />

@@ -48,6 +48,11 @@
     "Plus Jakarta Sans", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-utility: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --color-danger: var(--danger);
+  /* Two extra grounds so the page has tonal rhythm instead of one dark island:
+     sand is a warm lift for the results chapter, dusk the approach tone that
+     scroll-driven grounds ease into before an ink band. */
+  --color-sand: var(--ground-sand);
+  --color-dusk: var(--ground-dusk);
 }
 
 :root {
@@ -91,6 +96,9 @@
   --foil-c: #e3b23c;
   --shadow-tint: rgb(0 0 0 / 55%);
   --danger: #ff9b8a;
+  /* Between --page and --panel in luminance, warm-hued, so cards on it still lift. */
+  --ground-sand: #13120e;
+  --ground-dusk: #0e0e12;
 }
 
 /* --- / light mode — the default. Keyed on :not([data-theme="dark"]) so a
@@ -135,6 +143,9 @@
   --foil-c: #7d5810;
   --shadow-tint: rgb(70 54 16 / 18%);
   --danger: #b4342a;
+  /* Deeper than --panel so panel cards sit up off it; dusk deeper again. */
+  --ground-sand: #efe5d0;
+  --ground-dusk: #e3d8c0;
 }
 
 /* The map embed only needs inverting on the dark theme. */
@@ -288,6 +299,24 @@ html.lenis {
   color-scheme: dark;
   background-color: var(--page);
   color: var(--body);
+  /* Grain. A flat #0b0e14 reads as a fill; a little fractal noise reads as a
+     surface. The layer is isolated below the band's children (z -1 inside its
+     own stacking context) so it textures the ground, never the text. One SVG
+     tile, generated once, tiled — no asset, no runtime cost. */
+  position: relative;
+  isolation: isolate;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    /* screen, not overlay: overlay collapses to ~0 on a near-black base. */
+    opacity: 0.12;
+    mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
 }
 
 @media (min-width: 640px) {
@@ -338,6 +367,188 @@ html.lenis {
   }
 }
 
+/* --- Grounds that travel with the scroll ----------------------------------- */
+
+/* The static fallback is whatever bg-* class the section already carries.
+   Where the browser can drive animation from scroll and motion is welcome, the
+   ground eases from --ground-from to --ground-to across the section's own view
+   timeline, so the page darkens on the way into an ink band and warms coming
+   out of one, instead of cutting. --ground-range overrides the window. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .ground-drift {
+      animation: ground-drift linear both;
+      animation-timeline: view();
+      animation-range: var(--ground-range, contain 50% exit 60%);
+    }
+
+    /* The next ink band arrives as halftone: a grid of ink dots over the
+       section's foot that grow until they close, heaviest at the seam, so the
+       ground dissolves into the band instead of fading into it. Isolated below
+       the section's children (z -1), so it textures the ground and never the
+       type; the copy that sits low in these sections is inside opaque panels
+       anyway. Two masks intersected: the dot tile, whose radius rides the
+       scroll, and a vertical ramp so the layer's top edge starts clear. Drives
+       off its own view timeline: the dots start as the layer enters and have
+       closed by the time the seam has risen a fifth of the viewport, so the
+       band reads as ink growing upward through the ground. */
+    .ink-approach {
+      position: relative;
+      isolation: isolate;
+      &::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        z-index: -1;
+        height: 45vh;
+        pointer-events: none;
+        background: #0b0e14;
+        mask-image:
+          radial-gradient(circle, #000 var(--dg-r), transparent calc(var(--dg-r) + 0.75px)),
+          linear-gradient(to bottom, transparent, #000 75%);
+        mask-size:
+          22px 22px,
+          100% 100%;
+        mask-composite: intersect;
+        animation: dot-gain linear both;
+        animation-timeline: view();
+        animation-range: entry 10% contain 40%;
+      }
+    }
+  }
+}
+
+/* The dot radius has to be a registered <length> to interpolate. 16px closes a
+   22px tile (the corner sits 15.6px from the centre). */
+@property --dg-r {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes dot-gain {
+  from {
+    --dg-r: 0px;
+  }
+  to {
+    --dg-r: 16px;
+  }
+}
+
+/* --- Hero curtain: the page slides up over a pinned hero ------------------ */
+
+/* Only when the hero fits the viewport (measured in Hero.tsx; a pinned hero
+   taller than the screen would hide its own foot for good), and only where
+   scroll-driven animation is available and motion is welcome. The wrapper
+   around everything after the hero (routes/index.tsx) is opaque and above it,
+   so the page rises over the hero like a curtain while the copy recedes; the
+   portrait already drifts (`.hero-drift`). */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .hero-section.is-pinned {
+      position: sticky;
+      top: 0;
+      /* Once the curtain has covered it entirely, the hero is hidden outright:
+         nothing behind the page to tab into, nothing to composite. Visibility
+         flips only at the very end of the range. */
+      animation: hero-hide linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100svh;
+    }
+    .is-pinned .hero-copy {
+      animation: hero-recede linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 70vh;
+    }
+  }
+}
+
+@keyframes hero-hide {
+  to {
+    visibility: hidden;
+  }
+}
+
+@keyframes hero-recede {
+  to {
+    opacity: 0.25;
+    transform: translateY(-32px) scale(0.97);
+  }
+}
+
+/* --- Chapter marks: the hairline beside each numeral draws itself --------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .section-heading {
+      view-timeline-name: --chapter;
+      view-timeline-axis: block;
+    }
+    .chapter-rule {
+      animation: chapter-rule linear both;
+      animation-timeline: --chapter;
+      animation-range: entry 20% contain 25%;
+    }
+    /* The results heading rides the sticky pin, and a stuck subject's contain
+       phase stretches across the whole rail, so its rule would draw for
+       thousands of pixels. Finish it on entry instead, before the pin engages. */
+    .results-rail .chapter-rule {
+      animation-range: entry 20% entry 100%;
+    }
+  }
+}
+
+@keyframes chapter-rule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* --- Read-along: About's copy brightens as the eye reaches it ------------- */
+
+/* Each word's window opens a little after the previous one's, so the
+   brightening sweeps through the paragraph while it crosses the middle of the
+   viewport, roughly where someone is actually reading. Colour only: the words
+   never move. The muted state stays legible on purpose. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .read-text {
+      view-timeline-name: --read;
+      view-timeline-axis: block;
+    }
+    .read-word {
+      color: color-mix(in srgb, var(--body) 50%, transparent);
+      animation: read-word linear both;
+      animation-timeline: --read;
+      animation-range: cover calc(30% + var(--w, 0) * 27%) cover calc(38% + var(--w, 0) * 27%);
+    }
+  }
+}
+
+@keyframes read-word {
+  from {
+    color: color-mix(in srgb, var(--body) 50%, transparent);
+  }
+  55% {
+    color: var(--gold);
+  }
+  to {
+    color: var(--body);
+  }
+}
+
+@keyframes ground-drift {
+  from {
+    background-color: var(--ground-from);
+  }
+  to {
+    background-color: var(--ground-to);
+  }
+}
+
 /* --- Results rail: the page's vertical scroll drives the cards sideways --- */
 
 /* Wherever the browser can drive animation from scroll and the visitor has
@@ -348,8 +559,11 @@ html.lenis {
     .results-rail.is-rail {
       view-timeline-name: --rail;
       view-timeline-axis: block;
-      /* One viewport to pin, then ~300px of runway per card. */
-      min-height: calc(100svh + var(--rail-cards, 12) * 300px);
+      /* One viewport to pin, then 220px of runway per card: the row moves a
+         little faster than the finger (about 1.2x), which reads as brisk
+         rather than endless, and the skip button covers anyone who came for
+         the timetable. */
+      min-height: calc(100svh + var(--rail-cards, 12) * 220px);
       padding-block: 0;
       /* Where the content column starts, so the track lines up with it. */
       --rail-pad: max(1.5rem, calc((100vw - 1200px) / 2 + 1.5rem));
@@ -388,6 +602,21 @@ html.lenis {
       animation-timeline: --rail;
       animation-range: contain 0% contain 100%;
     }
+    /* The way out. Shown only while the rail is pinned, and gone for the last
+       stretch, when there is nothing left to skip. */
+    .is-rail .results-skip {
+      display: inline-flex;
+      animation: rail-skip linear both;
+      animation-timeline: --rail;
+      animation-range: contain 82% contain 100%;
+    }
+  }
+}
+
+@keyframes rail-skip {
+  to {
+    opacity: 0;
+    visibility: hidden;
   }
 }
 
@@ -415,8 +644,7 @@ html.lenis {
       view-timeline-axis: block;
     }
     .about-photo-a,
-    .about-photo-b,
-    .about-ghost {
+    .about-photo-b {
       animation: linear both;
       animation-timeline: --about;
       animation-range: contain 0% contain 100%;
@@ -426,9 +654,6 @@ html.lenis {
     }
     .about-photo-b {
       animation-name: about-b;
-    }
-    .about-ghost {
-      animation-name: about-ghost;
     }
   }
 }
@@ -448,15 +673,6 @@ html.lenis {
   }
   to {
     transform: translateY(30px);
-  }
-}
-
-@keyframes about-ghost {
-  from {
-    transform: translateX(5vw);
-  }
-  to {
-    transform: translateX(-7vw);
   }
 }
 
@@ -481,7 +697,11 @@ html.lenis {
   .results-progress > span,
   .about-photo-a,
   .about-photo-b,
-  .about-ghost {
+  .ground-drift,
+  .ink-approach::after,
+  .read-word,
+  .chapter-rule,
+  .hero-copy {
     animation: none !important;
     opacity: 1;
     transform: none;

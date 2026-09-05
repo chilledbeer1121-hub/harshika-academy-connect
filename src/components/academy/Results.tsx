@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowDown, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -23,7 +23,8 @@ import { Reveal, SectionHeading } from "./shared";
  *   mouse drag on desktop.
  *
  * Nothing here branches on which mode is active except the focus handler,
- * which has to know whether a card can be scrolled into view natively.
+ * which has to know whether a card can be scrolled into view natively. The
+ * skip button is rail-only too, but CSS hides it, so it needs no branch.
  */
 export function Results() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -97,6 +98,15 @@ export function Results() {
     scrollWindowTo(Math.round(sectionTop + progress * runway), reducedMotion);
   };
 
+  /**
+   * Eighteen cards is a long ride for a parent who came for the timetable.
+   * Land on whatever follows the rail, with its own scroll margin honoured.
+   */
+  const skipRail = () => {
+    const next = sectionRef.current?.nextElementSibling;
+    if (next instanceof HTMLElement) scrollWindowTo(next, reducedMotion);
+  };
+
   // Click-and-drag on desktop. Touch devices already scroll natively, so mouse only.
   const drag = useRef({ startX: 0, startScroll: 0 });
 
@@ -126,13 +136,30 @@ export function Results() {
     <section
       ref={sectionRef}
       id="results"
-      className={cn("results-rail scroll-mt-28 py-14 sm:py-24 lg:py-28", railable && "is-rail")}
-      style={{ "--rail-cards": results.length } as React.CSSProperties}
+      className={cn(
+        "results-rail ground-drift scroll-mt-28 bg-sand py-14 sm:py-24 lg:py-28",
+        railable && "is-rail",
+      )}
+      style={
+        {
+          "--rail-cards": results.length,
+          // Warms from the ink band above to sand over the first viewport of
+          // travel (top-at-bottom to top-at-top), whatever the section's height.
+          "--ground-from": "var(--ground-dusk)",
+          "--ground-to": "var(--ground-sand)",
+          "--ground-range": "entry 0% contain 0%",
+        } as React.CSSProperties
+      }
     >
       <div className="results-pin">
         <div className="results-inner mx-auto w-full max-w-[1200px] px-5 sm:px-6">
           <div className="flex items-end justify-between gap-5">
-            <SectionHeading eyebrow="Our Results" title="Students Who" highlight="Made It Count" />
+            <SectionHeading
+              chapter="04"
+              eyebrow="Our Results"
+              title="Students Who"
+              highlight="Made It Count"
+            />
             {/* Nothing to page through when the row already fits — a pair of
                 permanently disabled arrows just reads as broken. */}
             <div
@@ -164,9 +191,20 @@ export function Results() {
             </div>
           </div>
 
-          {/* Rail mode only: how far along the row you are. */}
-          <div aria-hidden="true" className="results-progress mt-6 hidden h-px w-full bg-gold/15">
-            <span className="block h-full w-full origin-left bg-gold-fill" />
+          {/* Rail mode only: how far along the row you are, and the way out.
+              The skip pill rides the line's right end and overlaps only the
+              margins above and below it. Nothing may float over the cards:
+              on a phone the pinned content fills the whole viewport. */}
+          <div className="results-progress relative mt-6 hidden h-px w-full bg-gold/15">
+            <span aria-hidden="true" className="block h-full w-full origin-left bg-gold-fill" />
+            <button
+              type="button"
+              onClick={skipRail}
+              className="results-skip focus-ring absolute right-0 top-1/2 hidden -translate-y-1/2 items-center gap-2 rounded-full border border-gold/30 bg-page px-3 py-1.5 font-utility text-[10px] font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold/10"
+            >
+              Skip results
+              <ArrowDown className="size-3.5" aria-hidden="true" />
+            </button>
           </div>
 
           <div

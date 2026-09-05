@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ import {
   fullAddress,
   mapDirectionsUrl,
   mapEmbedUrl,
+  whatsappFor,
   whatsappUrl,
 } from "@/data/content";
 import { Reveal, SectionHeading } from "./shared";
@@ -92,10 +93,25 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="scroll-mt-28 px-5 py-14 sm:px-6 sm:py-24 lg:py-28">
-      <div className="mx-auto grid max-w-[1200px] gap-14 lg:grid-cols-2 lg:gap-20">
+    <section
+      id="contact"
+      className="ground-drift ink-approach relative scroll-mt-28 overflow-clip px-5 py-14 sm:px-6 sm:py-24 lg:py-28"
+      style={
+        {
+          "--ground-from": "var(--page)",
+          "--ground-to": "var(--ground-dusk)",
+        } as React.CSSProperties
+      }
+    >
+      {/* A quiet warm wash — the only cream section left without its own ground. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_30%,rgba(227,178,60,0.10),transparent_50%)]"
+      />
+      <div className="relative mx-auto grid max-w-[1200px] gap-14 lg:grid-cols-2 lg:gap-20">
         <div>
           <SectionHeading
+            chapter="07"
             eyebrow="Get In Touch"
             title="Come See The"
             highlight="Classroom"
@@ -214,105 +230,137 @@ export function Contact() {
                 </Button>
               </div>
             ) : (
-              <form ref={formRef} className="mt-8 space-y-5" onSubmit={onSubmit} noValidate>
-                <Field
-                  name="studentName"
-                  label="Student Name"
-                  autoComplete="name"
-                  value={values.studentName}
-                  error={errors.studentName}
-                  onChange={(value) => setField("studentName", value)}
-                />
-                <Field
-                  name="parentName"
-                  label="Parent's Name"
-                  autoComplete="name"
-                  value={values.parentName}
-                  error={errors.parentName}
-                  onChange={(value) => setField("parentName", value)}
-                />
-
-                <div className="grid gap-5 sm:grid-cols-2">
+              <>
+                {/* Two taps for the common question. A parent who only wants to
+                    ask about one batch should not have to fill in a form first:
+                    each chip opens WhatsApp with that batch already named. */}
+                <div className="mt-6">
+                  <p className={labelClass}>In a hurry? Ask about a batch in one tap</p>
+                  <ul className="mt-3 flex flex-wrap gap-2">
+                    {classOptions.map((option) => (
+                      <li key={option}>
+                        <a
+                          href={whatsappFor(option)}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          aria-label={`Ask about the ${option} batch on WhatsApp`}
+                          className="focus-ring inline-flex items-center gap-1.5 rounded-full border border-gold/30 px-3 py-1.5 font-utility text-[10px] font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold/10"
+                        >
+                          <MessageCircle className="size-3" aria-hidden="true" />
+                          {option}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                  <p
+                    aria-hidden="true"
+                    className="mt-6 flex items-center gap-3 font-utility text-[10px] uppercase tracking-wider text-body/70"
+                  >
+                    <span className="h-px flex-1 bg-gold/15" />
+                    or send us the details
+                    <span className="h-px flex-1 bg-gold/15" />
+                  </p>
+                </div>
+                <form ref={formRef} className="mt-6 space-y-5" onSubmit={onSubmit} noValidate>
                   <Field
-                    name="phone"
-                    label="Phone Number"
-                    type="tel"
-                    inputMode="numeric"
-                    autoComplete="tel"
-                    value={values.phone}
-                    error={errors.phone}
-                    onChange={(value) => setField("phone", value)}
+                    name="studentName"
+                    label="Student Name"
+                    autoComplete="name"
+                    value={values.studentName}
+                    error={errors.studentName}
+                    onChange={(value) => setField("studentName", value)}
+                  />
+                  <Field
+                    name="parentName"
+                    label="Parent's Name"
+                    autoComplete="name"
+                    value={values.parentName}
+                    error={errors.parentName}
+                    onChange={(value) => setField("parentName", value)}
+                  />
+
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <Field
+                      name="phone"
+                      label="Phone Number"
+                      type="tel"
+                      inputMode="numeric"
+                      autoComplete="tel"
+                      value={values.phone}
+                      error={errors.phone}
+                      onChange={(value) => setField("phone", value)}
+                    />
+
+                    <div>
+                      <label htmlFor="studentClass" className={labelClass}>
+                        Class
+                      </label>
+                      <select
+                        id="studentClass"
+                        name="studentClass"
+                        value={values.studentClass}
+                        onChange={(event) => setField("studentClass", event.target.value)}
+                        aria-invalid={errors.studentClass ? true : undefined}
+                        aria-describedby={errors.studentClass ? "studentClass-error" : undefined}
+                        className={cn(controlClass, "h-11", errors.studentClass && errorRingClass)}
+                      >
+                        <option value="">Select class</option>
+                        {classOptions.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.studentClass ? (
+                        <p id="studentClass-error" className={errorTextClass}>
+                          {errors.studentClass}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <Field
+                    name="subjects"
+                    label="Subject(s) of interest"
+                    value={values.subjects}
+                    onChange={(value) => setField("subjects", value)}
                   />
 
                   <div>
-                    <label htmlFor="studentClass" className={labelClass}>
-                      Class
+                    <label htmlFor="message" className={labelClass}>
+                      Message (Optional)
                     </label>
-                    <select
-                      id="studentClass"
-                      name="studentClass"
-                      value={values.studentClass}
-                      onChange={(event) => setField("studentClass", event.target.value)}
-                      aria-invalid={errors.studentClass ? true : undefined}
-                      aria-describedby={errors.studentClass ? "studentClass-error" : undefined}
-                      className={cn(controlClass, "h-11", errors.studentClass && errorRingClass)}
-                    >
-                      <option value="">Select class</option>
-                      {classOptions.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.studentClass ? (
-                      <p id="studentClass-error" className={errorTextClass}>
-                        {errors.studentClass}
-                      </p>
-                    ) : null}
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={4}
+                      value={values.message}
+                      onChange={(event) => setField("message", event.target.value)}
+                      className={cn(controlClass, "resize-none py-3")}
+                    />
                   </div>
-                </div>
 
-                <Field
-                  name="subjects"
-                  label="Subject(s) of interest"
-                  value={values.subjects}
-                  onChange={(value) => setField("subjects", value)}
-                />
-
-                <div>
-                  <label htmlFor="message" className={labelClass}>
-                    Message (Optional)
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    value={values.message}
-                    onChange={(event) => setField("message", event.target.value)}
-                    className={cn(controlClass, "resize-none py-3")}
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  className="focus-ring h-12 w-full rounded-full bg-gold-fill font-utility text-xs font-bold uppercase tracking-widest text-on-gold transition-colors hover:bg-gold-fill-strong"
-                >
-                  Send Enquiry on WhatsApp
-                </Button>
-
-                <p className="text-center text-xs leading-[1.65] text-body">
-                  We reply fastest on WhatsApp. Prefer to{" "}
-                  <a
-                    href={whatsappUrl}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="focus-ring rounded font-semibold text-gold transition-colors hover:text-gold-bright"
+                  <Button
+                    type="submit"
+                    className="focus-ring h-12 w-full rounded-full bg-gold-fill font-utility text-xs font-bold uppercase tracking-widest text-on-gold transition-colors hover:bg-gold-fill-strong"
                   >
-                    just message us
-                  </a>{" "}
-                  instead?
-                </p>
-              </form>
+                    Send Enquiry on WhatsApp
+                  </Button>
+
+                  <p className="text-center text-xs leading-[1.65] text-body">
+                    We reply fastest on WhatsApp. Prefer to{" "}
+                    <a
+                      href={whatsappUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="focus-ring rounded font-semibold text-gold transition-colors hover:text-gold-bright"
+                    >
+                      just message us
+                    </a>{" "}
+                    instead?
+                  </p>
+                </form>
+              </>
             )}
           </div>
         </Reveal>

@@ -1,16 +1,44 @@
+import { useEffect, useRef, useState } from "react";
 import { Phone } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { academy, faculty, hero, heroPortrait, whatsappUrl } from "@/data/content";
 import { GoldArc, Reveal } from "./shared";
 
+/**
+ * The hero pins while the rest of the page slides up over it (`.hero-section`
+ * in styles.css) — but only when it fits the viewport. A pinned hero taller
+ * than the screen would keep its own foot hidden for good, and on phones the
+ * stacked hero always is, so the measurement is what turns the curtain on.
+ *
+ * `#home` lives on <main>, not here: a stuck sticky element reports where it
+ * is stuck, not where it is in the page, so anchors and the scroll-spy would
+ * both misread it.
+ */
 export function Hero() {
   const lead = faculty[0];
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [pinned, setPinned] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      const section = sectionRef.current;
+      if (!section) return;
+      setPinned(section.offsetHeight <= window.innerHeight + 1);
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   return (
     <section
-      id="home"
-      className="relative flex min-h-svh scroll-mt-28 items-center overflow-hidden px-5 pb-24 pt-28 sm:px-6 sm:pt-32"
+      ref={sectionRef}
+      className={cn(
+        "hero-section relative isolate flex min-h-svh items-center overflow-clip px-5 pb-24 pt-28 sm:px-6 sm:pt-32",
+        pinned && "is-pinned",
+      )}
     >
       {/* Soft gold glow behind the portrait. */}
       <div
@@ -21,7 +49,7 @@ export function Hero() {
       <div className="mx-auto flex w-full max-w-[1200px] flex-col items-stretch lg:grid lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-20">
         {/* display:contents on mobile lets these blocks be ordered around the
             portrait, which is a grid sibling; on lg the wrapper is the left column. */}
-        <div className="contents lg:relative lg:z-10 lg:block">
+        <div className="hero-copy contents lg:relative lg:z-10 lg:block">
           <Reveal className="order-1">
             <p className="font-utility text-xs font-semibold uppercase tracking-[0.18em] text-gold">
               {hero.eyebrow}
@@ -75,9 +103,12 @@ export function Hero() {
           </Reveal>
         </div>
 
+        {/* On lg the portrait is sized from the viewport height (4:5, minus the
+            section's padding), so the whole hero fits the first screen and can
+            pin. The copy column is shorter than the portrait everywhere. */}
         <Reveal
           delay={200}
-          className="hero-drift order-5 relative mx-auto mt-10 w-full max-w-[520px] lg:mt-0"
+          className="hero-drift order-5 relative mx-auto mt-10 w-full max-w-[520px] lg:mt-0 lg:w-[min(520px,(100svh-15rem)*0.8)]"
         >
           <div aria-hidden="true" className="absolute -inset-10 rounded-full bg-gold/5 blur-3xl" />
           <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-gold/20 bg-panel">

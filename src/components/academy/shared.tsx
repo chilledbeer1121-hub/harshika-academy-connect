@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import {
   Atom,
   BookOpen,
@@ -46,6 +46,35 @@ export function Reveal({
   );
 }
 
+/**
+ * A paragraph whose words brighten as a reader's eye would reach them: muted
+ * until the line is about to be read, a beat of gold as it is, then settled
+ * body colour. Each word carries its place in the paragraph as `--w`, and
+ * `.read-word` in styles.css offsets its window along the paragraph's own
+ * view timeline. Plain body text wherever that timeline is unavailable or
+ * motion is unwelcome.
+ */
+export function ReadText({ text, className }: { text: string; className?: string }) {
+  const words = text.split(/\s+/).filter(Boolean);
+  const last = Math.max(1, words.length - 1);
+
+  return (
+    <p className={cn("read-text", className)}>
+      {words.map((word, index) => (
+        <Fragment key={`${index}-${word}`}>
+          {index > 0 ? " " : null}
+          <span
+            className="read-word"
+            style={{ "--w": (index / last).toFixed(3) } as React.CSSProperties}
+          >
+            {word}
+          </span>
+        </Fragment>
+      ))}
+    </p>
+  );
+}
+
 export function LogoLockup({ compact = false }: { compact?: boolean }) {
   return (
     <a
@@ -75,21 +104,42 @@ export function LogoLockup({ compact = false }: { compact?: boolean }) {
   );
 }
 
+/**
+ * `chapter` is the section's number in the page's running order, set in gold
+ * foil with a hairline that draws itself as the heading scrolls in (see
+ * `.chapter-rule`). Decorative, so hidden from assistive tech; the eyebrow
+ * already names the section.
+ */
 export function SectionHeading({
+  chapter,
   eyebrow,
   title,
   highlight,
   intro,
   align = "left",
 }: {
+  chapter?: string;
   eyebrow: string;
   title: string;
   highlight?: string;
   intro?: string;
   align?: "left" | "center";
 }) {
+  const rule = (origin: string) => (
+    <span className={cn("chapter-rule h-px flex-1 bg-gold/35", origin)} />
+  );
+
   return (
-    <div className={cn("max-w-3xl", align === "center" && "mx-auto text-center")}>
+    <div className={cn("section-heading max-w-3xl", align === "center" && "mx-auto text-center")}>
+      {chapter ? (
+        <div aria-hidden="true" className="chapter-mark mb-6 flex items-center gap-4">
+          {align === "center" ? rule("origin-right") : null}
+          <span className="gold-foil font-display text-[1.75rem] leading-none tabular-nums">
+            {chapter}
+          </span>
+          {rule("origin-left")}
+        </div>
+      ) : null}
       <Reveal>
         <p className="font-utility text-xs font-semibold uppercase tracking-[0.18em] text-gold">
           {eyebrow}

@@ -28,6 +28,7 @@ export function CourseStack() {
     >
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
+          chapter="02"
           eyebrow="Courses & Batches"
           title="What We"
           highlight="Teach"

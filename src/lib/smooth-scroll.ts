@@ -37,15 +37,14 @@ export function startSmoothScroll(): () => void {
  *
  * While Lenis is running, a native `behavior: "smooth"` scroll fights its
  * inertia — two easings driving the same scroll position — so window scrolls
- * go through Lenis instead. Lenis does not read `scroll-margin-top`, so the
- * element's own margin is applied as the offset to match what
- * `scrollIntoView` would have done. Without Lenis, the browser handles it.
+ * go through Lenis instead. Lenis reads the element's `scroll-margin-top`
+ * itself (since 1.1), so no offset is passed: adding it here as well used to
+ * land every heading a full margin too low. Without Lenis, the browser handles
+ * the margin as part of `scrollIntoView`.
  */
 export function scrollWindowTo(target: HTMLElement | number, reducedMotion = false) {
   if (instance) {
-    const offset =
-      typeof target === "number" ? 0 : -parseFloat(getComputedStyle(target).scrollMarginTop || "0");
-    instance.scrollTo(target, { offset, immediate: reducedMotion });
+    instance.scrollTo(target, { immediate: reducedMotion });
     return;
   }
   const behavior: ScrollBehavior = reducedMotion ? "auto" : "smooth";

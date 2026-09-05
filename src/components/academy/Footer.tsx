@@ -5,7 +5,7 @@ export function Footer() {
   return (
     // pb-28 on small screens keeps the copyright clear of the floating
     // WhatsApp button when you reach the very bottom of the page.
-    <footer className="border-t border-gold/15 bg-page px-5 pb-28 pt-14 sm:px-6 sm:pb-14">
+    <footer className="ink-band border-t border-gold/15 px-5 pb-28 pt-14 sm:px-6 sm:pb-14">
       <div className="mx-auto grid max-w-[1200px] gap-12 md:grid-cols-3">
         <div>
           <LogoLockup />

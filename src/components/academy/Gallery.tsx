@@ -109,6 +109,7 @@ export function Gallery() {
     >
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
+          chapter="05"
           eyebrow="Inside the Academy"
           title="Gallery"
           intro="A glimpse of the calm, focused place where classes actually happen."

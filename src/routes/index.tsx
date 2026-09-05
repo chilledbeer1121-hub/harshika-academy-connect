@@ -5,7 +5,6 @@ import "lenis/dist/lenis.css";
 
 import { startSmoothScroll } from "@/lib/smooth-scroll";
 import { About } from "@/components/academy/About";
-import { Admission } from "@/components/academy/Admission";
 import { Contact } from "@/components/academy/Contact";
 import { CourseStack } from "@/components/academy/CourseStack";
 import { Faculty } from "@/components/academy/Faculty";
@@ -16,6 +15,7 @@ import { Footer } from "@/components/academy/Footer";
 import { Gallery } from "@/components/academy/Gallery";
 import { Header } from "@/components/academy/Header";
 import { Hero } from "@/components/academy/Hero";
+import { HonourWall } from "@/components/academy/HonourWall";
 import { Results } from "@/components/academy/Results";
 import { ScrollProgress } from "@/components/academy/ScrollProgress";
 import { TrustStrip } from "@/components/academy/TrustStrip";
@@ -121,18 +121,27 @@ function HomePage() {
       <ScrollProgress />
       <Header />
 
-      <main>
+      {/* `#home` sits on <main> rather than the hero: the hero may be pinned
+          (see Hero.tsx), and a stuck element misreports its page position. */}
+      <main id="home">
         <Hero />
-        <TrustStrip />
-        <About />
-        <CourseStack />
-        <Faculty />
-        <Admission />
-        <Results />
-        <Gallery />
-        <Faq />
-        <Contact />
-        <FinalCta />
+        {/* Opaque and positioned, so when the hero pins the rest of the page
+            slides up over it like a curtain: later in the tree, so it paints
+            above the hero without needing a z-index. Deliberately no z-index,
+            since that would make this wrapper a stacking context and trap the
+            lightboxes inside it beneath the header and the dock. */}
+        <div className="relative bg-page">
+          <TrustStrip />
+          <About />
+          <CourseStack />
+          <Faculty />
+          <Results />
+          <HonourWall />
+          <Gallery />
+          <Faq />
+          <Contact />
+          <FinalCta />
+        </div>
       </main>
 
       <Footer />

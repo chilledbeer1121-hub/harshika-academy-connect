@@ -54,3 +54,8 @@ add weight for nothing once cropped.
 `harshika-sarathe` is the one candid in the set — she sits right of centre
 with floor and a pillar filling the left — so it also crops horizontally:
 `x=144`, width `700`. Everything else uses the full source width.
+
+`aditya-yadav` and `devendra-yaduvanshi` arrived already cut square (900x900)
+for the circles on the achievers banner. The card's 4:5 box crops 90px off
+each side with `object-cover`, which keeps both faces (and the peace sign) in
+frame, so they were not re-cut.

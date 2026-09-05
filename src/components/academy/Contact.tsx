@@ -94,7 +94,13 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="relative scroll-mt-28 overflow-hidden px-5 py-14 sm:px-6 sm:py-24 lg:py-28"
+      className="ground-drift ink-approach relative scroll-mt-28 overflow-hidden px-5 py-14 sm:px-6 sm:py-24 lg:py-28"
+      style={
+        {
+          "--ground-from": "var(--page)",
+          "--ground-to": "var(--ground-dusk)",
+        } as React.CSSProperties
+      }
     >
       {/* A quiet warm wash — the only cream section left without its own ground. */}
       <div

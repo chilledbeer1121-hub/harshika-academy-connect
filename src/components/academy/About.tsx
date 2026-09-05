@@ -12,7 +12,13 @@ export function About() {
   return (
     <section
       id="about"
-      className="about-section relative scroll-mt-28 px-5 py-14 sm:px-6 sm:py-24 lg:py-28"
+      className="about-section ground-drift ink-approach relative scroll-mt-28 px-5 py-14 sm:px-6 sm:py-24 lg:py-28"
+      style={
+        {
+          "--ground-from": "var(--page)",
+          "--ground-to": "var(--ground-dusk)",
+        } as React.CSSProperties
+      }
     >
       <div className="relative mx-auto max-w-[1200px]">
         <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-20">

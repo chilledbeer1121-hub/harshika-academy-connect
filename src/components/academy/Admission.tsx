@@ -3,7 +3,17 @@ import { Reveal, SectionHeading } from "./shared";
 
 export function Admission() {
   return (
-    <section id="admission" className="scroll-mt-28 bg-sand px-5 py-14 sm:px-6 sm:py-24">
+    <section
+      id="admission"
+      className="ground-drift scroll-mt-28 bg-sand px-5 py-14 sm:px-6 sm:py-24"
+      style={
+        {
+          "--ground-from": "var(--ground-dusk)",
+          "--ground-to": "var(--ground-sand)",
+          "--ground-range": "entry 0% entry 100%",
+        } as React.CSSProperties
+      }
+    >
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
           eyebrow="Getting Started"

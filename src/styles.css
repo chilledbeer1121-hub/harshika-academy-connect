@@ -367,6 +367,65 @@ html.lenis {
   }
 }
 
+/* --- Grounds that travel with the scroll ----------------------------------- */
+
+/* The static fallback is whatever bg-* class the section already carries.
+   Where the browser can drive animation from scroll and motion is welcome, the
+   ground eases from --ground-from to --ground-to across the section's own view
+   timeline, so the page darkens on the way into an ink band and warms coming
+   out of one, instead of cutting. --ground-range overrides the window. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .ground-drift {
+      animation: ground-drift linear both;
+      animation-timeline: view();
+      animation-range: var(--ground-range, contain 50% exit 60%);
+    }
+
+    /* A dark fade that rises from the section's foot as the next ink band
+       nears. Isolated below the section's children (z -1), so it tints the
+       ground and never the type; the copy that sits low in these sections is
+       inside opaque panels anyway. Drives off its own view timeline: from a
+       quarter entered to top-at-top, when the seam is in view. */
+    .ink-approach {
+      position: relative;
+      isolation: isolate;
+      &::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        z-index: -1;
+        height: 45vh;
+        pointer-events: none;
+        background: linear-gradient(to bottom, transparent, #0b0e14);
+        animation: ink-approach linear both;
+        animation-timeline: view();
+        animation-range: entry 25% exit 0%;
+      }
+    }
+  }
+}
+
+@keyframes ground-drift {
+  from {
+    background-color: var(--ground-from);
+  }
+  to {
+    background-color: var(--ground-to);
+  }
+}
+
+@keyframes ink-approach {
+  from {
+    opacity: 0;
+    transform: translateY(40%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* --- Results rail: the page's vertical scroll drives the cards sideways --- */
 
 /* Wherever the browser can drive animation from scroll and the visitor has
@@ -496,7 +555,9 @@ html.lenis {
   .results-track,
   .results-progress > span,
   .about-photo-a,
-  .about-photo-b {
+  .about-photo-b,
+  .ground-drift,
+  .ink-approach::after {
     animation: none !important;
     opacity: 1;
     transform: none;

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import {
   Atom,
   BookOpen,
@@ -43,6 +43,35 @@ export function Reveal({
     >
       {children}
     </Tag>
+  );
+}
+
+/**
+ * A paragraph whose words brighten as a reader's eye would reach them: muted
+ * until the line is about to be read, a beat of gold as it is, then settled
+ * body colour. Each word carries its place in the paragraph as `--w`, and
+ * `.read-word` in styles.css offsets its window along the paragraph's own
+ * view timeline. Plain body text wherever that timeline is unavailable or
+ * motion is unwelcome.
+ */
+export function ReadText({ text, className }: { text: string; className?: string }) {
+  const words = text.split(/\s+/).filter(Boolean);
+  const last = Math.max(1, words.length - 1);
+
+  return (
+    <p className={cn("read-text", className)}>
+      {words.map((word, index) => (
+        <Fragment key={`${index}-${word}`}>
+          {index > 0 ? " " : null}
+          <span
+            className="read-word"
+            style={{ "--w": (index / last).toFixed(3) } as React.CSSProperties}
+          >
+            {word}
+          </span>
+        </Fragment>
+      ))}
+    </p>
   );
 }
 

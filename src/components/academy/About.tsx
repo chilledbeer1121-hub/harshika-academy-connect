@@ -1,5 +1,5 @@
 import { about, aboutImages, pillars } from "@/data/content";
-import { PillarGlyph, Reveal, SectionHeading } from "./shared";
+import { PillarGlyph, ReadText, Reveal, SectionHeading } from "./shared";
 
 /**
  * Split layout with the photographs pinned on lg while the copy scrolls
@@ -59,7 +59,7 @@ export function About() {
             <div className="mt-7 space-y-6 text-base leading-[1.7] text-body sm:text-lg">
               {about.paragraphs.map((paragraph, index) => (
                 <Reveal key={paragraph.slice(0, 24)} delay={index * 80} as="div">
-                  <p>{paragraph}</p>
+                  <ReadText text={paragraph} />
                 </Reveal>
               ))}
             </div>

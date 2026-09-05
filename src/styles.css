@@ -406,6 +406,39 @@ html.lenis {
   }
 }
 
+/* --- Read-along: About's copy brightens as the eye reaches it ------------- */
+
+/* Each word's window opens a little after the previous one's, so the
+   brightening sweeps through the paragraph while it crosses the middle of the
+   viewport, roughly where someone is actually reading. Colour only: the words
+   never move. The muted state stays legible on purpose. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .read-text {
+      view-timeline-name: --read;
+      view-timeline-axis: block;
+    }
+    .read-word {
+      color: color-mix(in srgb, var(--body) 50%, transparent);
+      animation: read-word linear both;
+      animation-timeline: --read;
+      animation-range: cover calc(30% + var(--w, 0) * 27%) cover calc(38% + var(--w, 0) * 27%);
+    }
+  }
+}
+
+@keyframes read-word {
+  from {
+    color: color-mix(in srgb, var(--body) 50%, transparent);
+  }
+  55% {
+    color: var(--gold);
+  }
+  to {
+    color: var(--body);
+  }
+}
+
 @keyframes ground-drift {
   from {
     background-color: var(--ground-from);
@@ -575,7 +608,8 @@ html.lenis {
   .about-photo-a,
   .about-photo-b,
   .ground-drift,
-  .ink-approach::after {
+  .ink-approach::after,
+  .read-word {
     animation: none !important;
     opacity: 1;
     transform: none;

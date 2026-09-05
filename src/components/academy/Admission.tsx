@@ -1,11 +1,17 @@
 import { admissionSteps } from "@/data/content";
 import { Reveal, SectionHeading } from "./shared";
 
+/**
+ * A strip, not a stage: two steps do not need a band of their own. The
+ * heading sits left, the steps run alongside as numbered notes, each under a
+ * hairline that draws in on the step's own view timeline (`.step-rule`), the
+ * second a beat after the first.
+ */
 export function Admission() {
   return (
     <section
       id="admission"
-      className="ground-drift scroll-mt-28 bg-sand px-5 py-14 sm:px-6 sm:py-24"
+      className="ground-drift scroll-mt-28 bg-sand px-5 py-12 sm:px-6 sm:py-16"
       style={
         {
           "--ground-from": "var(--ground-dusk)",
@@ -14,40 +20,33 @@ export function Admission() {
         } as React.CSSProperties
       }
     >
-      <div className="mx-auto max-w-[1200px]">
+      <div className="mx-auto grid max-w-[1200px] gap-10 md:grid-cols-[0.8fr_1.2fr] md:items-center md:gap-16">
         <SectionHeading
           chapter="04"
           eyebrow="Getting Started"
           title="Two Steps"
           highlight="to Join"
-          align="center"
         />
 
-        <ol className="relative mt-14 grid gap-10 md:grid-cols-2 md:gap-10">
-          {/* Connector line, desktop only — it sits behind the numbered discs. */}
-          <span
-            aria-hidden="true"
-            /* Inset to the centre of the first and last disc, derived from the
-               step count so it cannot go stale if a step is added or removed. */
-            style={{ inset: `1.5rem ${100 / (admissionSteps.length * 2)}% auto` }}
-            className="absolute top-6 hidden h-px bg-gold/30 md:block"
-          />
+        <ol className="grid gap-8 sm:grid-cols-2 sm:gap-10">
           {admissionSteps.map((step, index) => (
             <Reveal
               as="li"
               key={step.title}
               delay={index * 120}
-              className="relative flex gap-4 md:block md:text-center"
+              className="admission-step relative pt-5"
             >
-              <span className="relative z-10 grid size-12 shrink-0 place-items-center rounded-full border border-gold bg-page font-display text-xl text-gold md:mx-auto">
-                {index + 1}
+              <span
+                aria-hidden="true"
+                className="step-rule absolute inset-x-0 top-0 h-px origin-left bg-gold/40"
+                style={{ "--step": index } as React.CSSProperties}
+              />
+              {/* The list is already numbered for assistive tech. */}
+              <span aria-hidden="true" className="gold-foil font-display text-4xl leading-none">
+                {String(index + 1).padStart(2, "0")}
               </span>
-              <div className="pt-1 md:pt-6">
-                <h3 className="font-utility text-sm font-semibold text-heading">{step.title}</h3>
-                <p className="mt-2 max-w-xs text-sm leading-[1.65] text-body md:mx-auto">
-                  {step.text}
-                </p>
-              </div>
+              <h3 className="mt-3 font-utility text-sm font-semibold text-heading">{step.title}</h3>
+              <p className="mt-1.5 max-w-xs text-sm leading-[1.65] text-body">{step.text}</p>
             </Reveal>
           ))}
         </ol>

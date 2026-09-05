@@ -507,6 +507,21 @@ html.lenis {
   }
 }
 
+/* --- Admission strip: each step's rule draws in, the second after the first */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .admission-step {
+      view-timeline-name: --step;
+      view-timeline-axis: block;
+    }
+    .step-rule {
+      animation: chapter-rule linear both;
+      animation-timeline: --step;
+      animation-range: entry calc(20% + var(--step, 0) * 30%) contain calc(var(--step, 0) * 30%);
+    }
+  }
+}
+
 /* --- Read-along: About's copy brightens as the eye reaches it ------------- */
 
 /* Each word's window opens a little after the previous one's, so the
@@ -701,6 +716,7 @@ html.lenis {
   .ink-approach::after,
   .read-word,
   .chapter-rule,
+  .step-rule,
   .hero-copy {
     animation: none !important;
     opacity: 1;

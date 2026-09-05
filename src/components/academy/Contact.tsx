@@ -92,8 +92,16 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="scroll-mt-28 px-5 py-14 sm:px-6 sm:py-24 lg:py-28">
-      <div className="mx-auto grid max-w-[1200px] gap-14 lg:grid-cols-2 lg:gap-20">
+    <section
+      id="contact"
+      className="relative scroll-mt-28 overflow-hidden px-5 py-14 sm:px-6 sm:py-24 lg:py-28"
+    >
+      {/* A quiet warm wash — the only cream section left without its own ground. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_30%,rgba(227,178,60,0.10),transparent_50%)]"
+      />
+      <div className="relative mx-auto grid max-w-[1200px] gap-14 lg:grid-cols-2 lg:gap-20">
         <div>
           <SectionHeading
             eyebrow="Get In Touch"

@@ -7,7 +7,7 @@ export function Faculty() {
   return (
     <section
       id="faculty"
-      className="scroll-mt-28 overflow-hidden px-5 py-14 sm:px-6 sm:py-24 lg:py-28"
+      className="ink-band scroll-mt-28 overflow-hidden px-5 pb-14 pt-8 sm:px-6 sm:pb-24 sm:pt-14 lg:pb-28 lg:pt-16"
     >
       <div className="mx-auto max-w-[1200px] space-y-24">
         {faculty.map((teacher, index) => (

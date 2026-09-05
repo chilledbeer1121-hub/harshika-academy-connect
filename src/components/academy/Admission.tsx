@@ -3,10 +3,7 @@ import { Reveal, SectionHeading } from "./shared";
 
 export function Admission() {
   return (
-    <section
-      id="admission"
-      className="scroll-mt-28 border-y border-gold/10 bg-panel/60 px-5 py-14 sm:px-6 sm:py-24"
-    >
+    <section id="admission" className="scroll-mt-28 bg-sand px-5 py-14 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
           eyebrow="Getting Started"

@@ -126,7 +126,10 @@ export function Results() {
     <section
       ref={sectionRef}
       id="results"
-      className={cn("results-rail scroll-mt-28 py-14 sm:py-24 lg:py-28", railable && "is-rail")}
+      className={cn(
+        "results-rail scroll-mt-28 bg-sand py-14 sm:py-24 lg:py-28",
+        railable && "is-rail",
+      )}
       style={{ "--rail-cards": results.length } as React.CSSProperties}
     >
       <div className="results-pin">
